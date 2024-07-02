@@ -1,2 +1,2 @@
-# Code_Counter
-Creates statistics of source code: blank lines, non-blank lines, comments, total
+# Code_Counter - In progress
+Creates statistics of Python source code: counts blank lines, non-blank lines, comments, total
