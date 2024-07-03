@@ -6,6 +6,16 @@ import os
 
 @dataclass
 class Data:
+
+    '''
+    use_basic_cli_version:
+    At startup automatically
+    - opens file dialog for directory path
+    - display stats in terminal
+    No UI, no search cretaria options
+    '''
+    use_basic_cli_version: bool = True
+
     result_dic = dict()
     result_total = dict()
     text_list: str = None
@@ -104,17 +114,13 @@ def lines_counter():
     cv.result_total['sum_lines_comment'] += cv.lines_comment
     cv.result_total['sum_lines_all'] += cv.lines_all
                 
-                                    
 
-cv = Data()
-
-dir_path = 'D:/_DEV/Python/QTea_Media_Player/'
-# dir_path = 'D:/_DEV/Python/Code_Counter/'
-
-
-for dir_path_b, dir_names, file_names in os.walk(dir_path):
+def walk_dir_create_dic(dir_path):                                    
+    for dir_path_b, dir_names, file_names in os.walk(dir_path):
         for file in file_names:
-            if file.split('.')[-1] in ['py', 'pyw'] and 'test' not in file:
+            if (Path(file).suffix in ['.py', '.pyw'] and
+                'test' not in file and
+                'virtual' not in dir_path_b):
                 cv.file_path = Path(dir_path_b, file)
                 cv.result_dic[cv.file_path] = {}
                 cv.result_total = {
@@ -123,11 +129,19 @@ for dir_path_b, dir_names, file_names in os.walk(dir_path):
                     'sum_lines_all': 0
                     }
 
+cv = Data()
 
-for cv.file_path in cv.result_dic.keys():
-    open_file()
-    lines_counter()
-    print_single_file_stat()
-   
-print_total_stat()
+if cv.use_basic_cli_version:
+    from tkinter import filedialog as fd
+    dir_path = fd.askdirectory()
 
+    walk_dir_create_dic(dir_path)
+
+    for cv.file_path in cv.result_dic.keys():
+        open_file()
+        lines_counter()
+        print_single_file_stat()
+        cv.lines_blank = 0
+        cv.lines_comment = 0
+    
+    print_total_stat()
