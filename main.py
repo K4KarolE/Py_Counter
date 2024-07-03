@@ -16,8 +16,13 @@ class Data:
     '''
     use_basic_cli_version: bool = True
 
-    result_dic = dict()
-    result_total = dict()
+    result_dic = {}
+    result_total = {
+                    'sum_lines_blank': 0,
+                    'sum_lines_comment': 0,
+                    'sum_lines_all': 0
+                    }
+    
     text_list: str = None
 
     lines_blank: int = 0
@@ -37,11 +42,15 @@ def open_file():
 
 
 def separator_generator(total):
-    if total < 1000:
-        _sep_ = '   -   '
-    else:
-        _sep_ = '  -  '
-    return _sep_
+    sep_dic={
+        '10': '    -    ',
+        '100': '    -   ',
+        '1000': '   -   ',
+        '10000': '  -   '
+    }
+    for value in sep_dic:
+        if total < int(value):
+            return sep_dic[value]
 
 
 def print_single_file_stat():
@@ -123,11 +132,7 @@ def walk_dir_create_dic(dir_path):
                 'virtual' not in dir_path_b):
                 cv.file_path = Path(dir_path_b, file)
                 cv.result_dic[cv.file_path] = {}
-                cv.result_total = {
-                    'sum_lines_blank': 0,
-                    'sum_lines_comment': 0,
-                    'sum_lines_all': 0
-                    }
+                
 
 cv = Data()
 
