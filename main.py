@@ -1,39 +1,11 @@
-from dataclasses import dataclass
 from pathlib import Path
 import os
 
-
-
-@dataclass
-class Data:
-
-    '''
-    use_basic_cli_version:
-    At startup automatically
-    - opens file dialog for directory path
-    - display stats in terminal
-    No UI, no search cretaria options
-    '''
-    use_basic_cli_version: bool = True
-
-    result_dic = {}
-    result_total = {
-                    'sum_lines_blank': 0,
-                    'sum_lines_comment': 0,
-                    'sum_lines_all': 0
-                    }
-    
-    text_list: str = None
-
-    lines_blank: int = 0
-    lines_non_blank: int = 0
-    lines_comment: int = 0
-
-    file_path: str = None
-
-    column_titels = 'All / Non-blank / Blank / Comment'
-    sep_length = len(column_titels)
-
+from src import (
+    cv,
+    settings,
+    save_json
+)
 
 
 def open_file():
@@ -55,7 +27,7 @@ def separator_generator(total):
 
 def print_single_file_stat():
     cv.lines_non_blank = cv.lines_all - cv.lines_blank
-    name = f'{Path(cv.file_path).stem}:'
+    name = f'{Path(cv.file_path).name}:'
     dir = Path(cv.file_path).parent
     print(name)
     print('=' * len(name))
@@ -122,31 +94,63 @@ def lines_counter():
     cv.result_total['sum_lines_blank'] += cv.lines_blank
     cv.result_total['sum_lines_comment'] += cv.lines_comment
     cv.result_total['sum_lines_all'] += cv.lines_all
-                
 
-def walk_dir_create_dic(dir_path):                                    
-    for dir_path_b, dir_names, file_names in os.walk(dir_path):
+
+def no_excluded_items(list_to_exclude, in_name_or_path):
+    for _ in list_to_exclude:
+        if _ in in_name_or_path:
+            return False
+    return True     
+
+
+def walk_dir_create_dic():                                    
+    for dir_path_b, dir_names, file_names in os.walk(cv.dir_path):
         for file in file_names:
             if (Path(file).suffix in ['.py', '.pyw'] and
-                'test' not in file and
-                'virtual' not in dir_path_b):
-                cv.file_path = Path(dir_path_b, file)
-                cv.result_dic[cv.file_path] = {}
-                
+                no_excluded_items(cv.exclude_file_names, file) and
+                no_excluded_items(cv.exclude_dir_paths, dir_path_b)):
+                    cv.file_path = Path(dir_path_b, file)
+                    cv.result_dic[cv.file_path] = {}
 
-cv = Data()
 
-if cv.use_basic_cli_version:
+def print_title():
+    print('\n')
+    title = f'Numbers of {os.path.basename(cv.dir_path)}:'
+    print(title)
+    print('~' * len(title)  + '\n')
+
+
+def get_dir_path():
     from tkinter import filedialog as fd
-    dir_path = fd.askdirectory()
+    cv.dir_path = fd.askdirectory()
 
-    walk_dir_create_dic(dir_path)
 
-    for cv.file_path in cv.result_dic.keys():
-        open_file()
-        lines_counter()
-        print_single_file_stat()
-        cv.lines_blank = 0
-        cv.lines_comment = 0
-    
-    print_total_stat()
+def generate_exclude_lists():
+    cv.exclude_dir_paths = [value for value in settings['exc_dir_path'].values() if value]
+    cv.exclude_file_names = [value for value in settings['exc_file_name'].values() if value]
+
+
+def action_terminal_version():
+      
+    get_dir_path()
+
+    if cv.dir_path:
+        
+        generate_exclude_lists()
+        walk_dir_create_dic()
+        print_title()
+
+        for cv.file_path in cv.result_dic.keys():
+            open_file()
+            lines_counter()
+            print_single_file_stat()
+            cv.lines_blank = 0
+            cv.lines_comment = 0
+        
+        print_total_stat()
+
+
+
+
+if cv.post_result_to_terminal:
+    action_terminal_version()
