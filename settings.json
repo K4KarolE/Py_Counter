@@ -1,6 +1,6 @@
 {
   "post_result_to_terminal": true,
-  "last_used_dir_path": "",
+  "last_used_dir_path": "test path text",
   "exc_dir_path": {
     "1": "virtual",
     "2": "env",

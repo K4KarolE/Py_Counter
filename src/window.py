@@ -8,15 +8,16 @@ from tkinter import (
     END
 )
 
-from class_data import settings
+from class_data import settings, cv
+
 
 
 FONT_STYLE, FONT_SIZE = 'Arial', 11
-HEIGHT, WIDTH = 1, 17
+HEIGHT, WIDTH = 1, 19
 
 
-class ExcludeField(Text):
-    def __init__(self, field_text):
+class InputField(Text):
+    def __init__(self, field_text = None):
         super().__init__()
         self.master = window
         self.configure(height=HEIGHT, width=WIDTH, font=(FONT_STYLE, FONT_SIZE))
@@ -47,6 +48,13 @@ canvas.create_rectangle(rect_base-1, rect_base+2, window_width-rect_base, window
 canvas.pack()
 
 
+BASE_X = 40
+BASE_Y = 30
+
+dir_path_field = InputField(cv.last_used_dir_path)
+dir_path_field.configure(width=int(WIDTH*2.2))
+dir_path_field.place(x=BASE_X, y=BASE_Y)
+
 
 ''' Generate exclude field widgets '''
 exclude_dic = {
@@ -56,20 +64,20 @@ exclude_dic = {
 for exc_type in exclude_dic:
     for number in settings[exc_type]:
         field_text = settings[exc_type][number]
-        exclude_dic[exc_type][number] = ExcludeField(field_text)
+        exclude_dic[exc_type][number] = InputField(field_text)
 
 
 ''' Display exclude field widgets'''
-BASE_X = 40
-BASE_Y = 70
-DIFF_X = 200
-DIFF_Y = 35
+EXC_BASE_X = BASE_X
+EXC_BASE_Y = BASE_Y + 50
+EXC_DIFF_X = 200
+EXC_DIFF_Y = 35
 counter_x = 0
 counter_y = 0
 for exc_type in exclude_dic:
     for number in exclude_dic[exc_type]:
-        pos_x = BASE_X + DIFF_X * counter_x
-        pos_y = BASE_Y + DIFF_Y * counter_y
+        pos_x = EXC_BASE_X + EXC_DIFF_X * counter_x
+        pos_y = EXC_BASE_Y + EXC_DIFF_Y * counter_y
         exclude_dic[exc_type][number].place(x=pos_x, y=pos_y)
         counter_y += 1
     counter_y = 0
