@@ -13,11 +13,11 @@ from .class_data import (
     )
 
 
-def open_file():
-    with open(cv.file_path, 'r') as pf:
-        cv.text_list = pf.readlines()
-
-
+'''
+#############
+    PRINT
+#############
+'''
 def separator_generator(total):
     sep_dic={
         '10': '    -    ',
@@ -63,7 +63,17 @@ def print_total_stat():
     _sep_ = separator_generator(total)
     print(f'{total}{_sep_}{non_blank}{_sep_}{blank}{_sep_}{comment}\n')
     print('#' * cv.sep_length + '\n')
-    
+
+
+'''
+###############
+    COUNTER
+###############
+'''
+def open_file():
+    with open(cv.file_path, 'r') as pf:
+        cv.text_list = pf.readlines()
+
 
 def lines_counter():
     cv.lines_all = len(cv.text_list)
@@ -124,13 +134,11 @@ def walk_dir_create_dic():
                     cv.result_dic[cv.file_path] = {}
 
 
-def get_dir_path():
-    cv.dir_path = fd.askdirectory()
-    if cv.dir_path:
-        cv.dir_path_field.delete('1.0', END)
-        cv.dir_path_field.insert(END, cv.dir_path)
-
-
+'''
+##################
+    HELP FUNCS
+##################
+'''
 def dir_path_field_validation():
     return os.path.isdir(cv.dir_path_field.get("1.0", "end-1c"))
 
@@ -144,10 +152,21 @@ def save_all_field_values():
     settings['last_used_dir_path'] = cv.dir_path_field.get("1.0", "end-1c")
     for exc_type in cv.exclude_dic:
         for number in cv.exclude_dic[exc_type]:
-            field_value = cv.exclude_dic[exc_type][number].get("1.0", "end-1c")[:20]
+            field_value = cv.exclude_dic[exc_type][number].get("1.0", "end-1c").strip()[:19]
             settings[exc_type][number] = field_value
     save_json()
 
+
+'''
+#####################
+    BUTTON ACTION
+#####################
+'''
+def get_dir_path():
+    cv.dir_path = fd.askdirectory()
+    if cv.dir_path:
+        cv.dir_path_field.delete('1.0', END)
+        cv.dir_path_field.insert(END, cv.dir_path)
 
 def save_and_go():
     if dir_path_field_validation():
@@ -169,4 +188,4 @@ def save_and_go():
             title='ERROR',
             message='The directory path is not valid!',
             icon='error'
-            ) 
+            )

@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from tkinter import (
     Button,
     Canvas,
@@ -9,11 +8,8 @@ from tkinter import (
     END
     )
 
-from .class_data import settings, cv
-from .functions import (
-    get_dir_path,
-    save_and_go
-    )
+from .class_data import cv, settings, WORKING_DIRECTORY
+from .functions import get_dir_path, save_and_go
 
 
 
@@ -65,21 +61,21 @@ def generate_ui():
                         )    
 
 
-    # WINDOW
+    ''' WINDOW '''
     window = Tk()
-    window.title('Code Counter')
+    window.title('Py Counter')
     WINDOW_WIDTH = 450
-    WINDOW_HEIGHT = 380
+    WINDOW_HEIGHT = 400
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
     window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+%d+%d' % (screen_width/2-275, screen_height/2-125))    #   position to the middle of the screen
     window.resizable(False, False)
     window.configure(background=BG_COLOR)
     # ICON
-    working_directory = Path().resolve()
-    path_icon = Path(working_directory, "docs/icon.ico") 
+    path_icon = Path(WORKING_DIRECTORY, "docs/icon.ico") 
     window.iconbitmap(path_icon)
-    # RECTANGLE
+    
+    ''' CANVAS / RECTANGLE #1 '''
     RECT_BASE = 7
     CANVAS_FRAME_COLOR = '#D6D6D6'
     canvas = Canvas(window, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, background = BG_COLOR)
@@ -159,7 +155,7 @@ def generate_ui():
 
 
     button_go = MyButton('Save & Go', lambda: save_and_go())
-    button_go.configure(width=9)
-    button_go.place(x=WINDOW_WIDTH-93, y=WINDOW_HEIGHT-40)
+    button_go.configure(width=9, font=(FONT_STYLE, FONT_SIZE))
+    button_go.place(x=WINDOW_WIDTH-110, y=WINDOW_HEIGHT-55)
 
     window.mainloop()
