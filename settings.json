@@ -1,10 +1,9 @@
 {
-  "post_result_to_terminal": true,
-  "last_used_dir_path": "test path text",
+  "last_used_dir_path": "",
   "exc_dir_path": {
     "1": "virtual",
     "2": "env",
-    "3": "",
+    "3": "pycache",
     "4": "",
     "5": ""
   },
@@ -13,6 +12,6 @@
     "2": "",
     "3": "",
     "4": "",
-    "5": "last"
+    "5": ""
   }
 }

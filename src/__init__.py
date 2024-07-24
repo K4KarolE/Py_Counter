@@ -1,2 +1,1 @@
-from .class_data import *
-# from .window import *
+from .ui import generate_ui

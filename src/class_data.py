@@ -21,9 +21,6 @@ settings = open_json()
 @dataclass
 class Data:
 
-    post_result_to_terminal: bool = settings['post_result_to_terminal']
-    last_used_dir_path: str = settings['last_used_dir_path']
-
     result_dic = {}
     result_total = {
                     'sum_lines_blank': 0,
@@ -38,10 +35,13 @@ class Data:
     lines_comment: int = 0
 
     file_path: str = None
-    dir_path: str = None
+    dir_path: str = settings['last_used_dir_path']
 
     exclude_file_names = []
     exclude_dir_paths = []
+    exclude_dic = {}
+
+    dir_path_field: object = None
 
     column_titels = 'All / Non-blank / Blank / Comment'
     sep_length = len(column_titels)
