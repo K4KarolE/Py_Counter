@@ -7,6 +7,7 @@ from tkinter import (
     Tk,
     END
     )
+import sys
 
 from .class_data import cv, settings, WORKING_DIRECTORY
 from .functions import get_dir_path, save_and_go
@@ -72,8 +73,9 @@ def generate_ui():
     window.resizable(False, False)
     window.configure(background=BG_COLOR)
     # ICON
-    path_icon = Path(WORKING_DIRECTORY, "docs/icon.ico") 
-    window.iconbitmap(path_icon)
+    if not cv.os_linux:
+        path_icon = Path(WORKING_DIRECTORY, "docs/icon.ico") 
+        window.iconbitmap(path_icon)
     
     ''' CANVAS / RECTANGLE #1 '''
     RECT_BASE = 7
@@ -150,12 +152,21 @@ def generate_ui():
         BUTTONS
     #################
     '''
+    if cv.os_linux:
+        button_dir_width = 1
+        button_go_width = 8
+    
+    else:
+        button_dir_width = 4
+        button_go_width = 9
+
     button_dir = MyButton('/', lambda: get_dir_path())
+    button_dir.configure(width=button_dir_width)
     button_dir.place(x=WINDOW_WIDTH-58, y=BASE_Y-4)
 
 
     button_go = MyButton('Save & Go', lambda: save_and_go())
-    button_go.configure(width=9, font=(FONT_STYLE, FONT_SIZE))
+    button_go.configure(width=button_go_width, font=(FONT_STYLE, FONT_SIZE))
     button_go.place(x=WINDOW_WIDTH-110, y=WINDOW_HEIGHT-55)
 
     window.mainloop()

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from json import load, dump
+import sys
 
 
 def open_json():
@@ -45,6 +46,8 @@ class Data:
 
     column_titels = 'All / Non-blank / Blank / Comment'
     sep_length = len(column_titels)
+
+    os_linux: bool = (sys.platform == 'linux')
 
 
 cv = Data()
