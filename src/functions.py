@@ -1,4 +1,7 @@
 from pathlib import Path
+import logging
+import platform
+import subprocess
 from tkinter import (
     filedialog as fd,
     messagebox,
@@ -18,12 +21,20 @@ from .class_data import (
     PRINT
 #############
 '''
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logging.basicConfig(filename="output.log",
+                    format='%(message)s',
+                    filemode='w') # w/a
+
+
 def separator_generator(total):
     sep_dic={
         '10': '    -    ',
         '100': '    -   ',
         '1000': '   -   ',
-        '10000': '  -   '
+        '10000': '  -   ',
+        '10000000': ' - '
     }
     for value in sep_dic:
         if total < int(value):
@@ -31,23 +42,23 @@ def separator_generator(total):
 
 
 def print_title():
-    print('\n')
-    title = f'Numbers of {os.path.basename(cv.dir_path)}:'
-    print(title)
-    print('~' * len(title)  + '\n')
+    title = f'\nNumbers of {os.path.basename(cv.dir_path)}:'
+    logger.info(title)
+    logger.info('~' * len(title)  + '\n')
 
 
 def print_single_file_stat():
     cv.lines_non_blank = cv.lines_all - cv.lines_blank
     name = f'{Path(cv.file_path).name}:'
     dir = Path(cv.file_path).parent
-    print(name)
-    print('=' * len(name))
-    print(dir)
-    print('-' * len(str(dir)))
-    print(cv.column_titels)
     _sep_ = separator_generator(cv.lines_all)
-    print(f'{cv.lines_all}{_sep_}{cv.lines_non_blank}{_sep_}{cv.lines_blank}{_sep_}{cv.lines_comment}\n\n')
+    results = f'{cv.lines_all}{_sep_}{cv.lines_non_blank}{_sep_}{cv.lines_blank}{_sep_}{cv.lines_comment}\n\n'
+    logger.info(name)
+    logger.info('=' * len(name))
+    logger.info(dir)
+    logger.info('-' * len(str(dir)))
+    logger.info(cv.column_titels)
+    logger.info(results)
 
 
 def print_total_stat():
@@ -55,14 +66,27 @@ def print_total_stat():
     comment = cv.result_total['sum_lines_comment']
     non_blank = total - comment
     blank = cv.result_total['sum_lines_blank']
-    print()
-    print('#' * cv.sep_length)
-    print(' ' * int(cv.sep_length/2-3) + 'TOTAL')
-    print(cv.column_titels)
-    print("-" * cv.sep_length)
     _sep_ = separator_generator(total)
-    print(f'{total}{_sep_}{non_blank}{_sep_}{blank}{_sep_}{comment}\n')
-    print('#' * cv.sep_length + '\n')
+    results = f'{total}{_sep_}{non_blank}{_sep_}{blank}{_sep_}{comment}\n'
+    max_length = max(cv.sep_length, len(results))
+
+    logger.info('\n')
+    logger.info('#' * max_length)
+    logger.info(' ' * int(max_length/2-3) + 'TOTAL')
+    logger.info(cv.column_titels)
+    logger.info("-" * max_length)
+    logger.info(results)
+    logger.info('#' * max_length + '\n')
+
+
+def open_output_log():
+    try:
+        if platform.system() == 'Windows':
+            subprocess.Popen(['notepad', 'output.log'])
+        else:
+            subprocess.Popen(["xdg-open", 'output.log'])
+    except:
+            messagebox.showinfo('ERROR', 'Was not able to open the output log file.')
 
 
 '''
@@ -182,7 +206,8 @@ def save_and_go():
             cv.lines_blank = 0
             cv.lines_comment = 0
         print_total_stat()
-    
+        open_output_log()
+
     else:
         messagebox.showinfo(
             title='ERROR',
