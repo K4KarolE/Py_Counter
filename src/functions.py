@@ -57,7 +57,7 @@ def print_single_file_stat():
     logger.info('=' * len(name))
     logger.info(dir)
     logger.info('-' * len(str(dir)))
-    logger.info(cv.column_titels)
+    logger.info(cv.column_titles)
     logger.info(results)
 
 
@@ -73,10 +73,13 @@ def print_total_stat():
     logger.info('\n')
     logger.info('#' * max_length)
     logger.info(' ' * int(max_length/2-3) + 'TOTAL')
-    logger.info(cv.column_titels)
+    logger.info(cv.column_titles)
     logger.info("-" * max_length)
     logger.info(results)
     logger.info('#' * max_length + '\n')
+    logger.info('-_' * 40)
+    logger.info('||' * 40)
+    logger.info('\n'*3)
 
 
 def open_output_log():
@@ -118,7 +121,7 @@ def lines_counter():
             
             if comm_sym:
 
-                # """ random comment """ / """randomcomment"""
+                # """ random comment """ / """random comment"""
                 if 2 in [line.count(comment_symbols[0]), line.count(comment_symbols[1])]:
                     cv.lines_comment += 1
                 
@@ -181,6 +184,13 @@ def save_all_field_values():
     save_json()
 
 
+def reset_support_variables():
+    cv.result_total['sum_lines_blank'] = 0
+    cv.result_total['sum_lines_comment'] = 0
+    cv.result_total['sum_lines_all'] = 0
+    cv.result_dic = {}
+
+
 '''
 #####################
     BUTTON ACTION
@@ -207,6 +217,7 @@ def save_and_go():
             cv.lines_comment = 0
         print_total_stat()
         open_output_log()
+        reset_support_variables()
 
     else:
         messagebox.showinfo(

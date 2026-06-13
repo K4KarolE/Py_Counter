@@ -44,8 +44,8 @@ class Data:
 
     dir_path_field: object = None
 
-    column_titels = 'All / Non-blank / Blank / Comment'
-    sep_length = len(column_titels)
+    column_titles = 'All / Non-blank / Blank / Comment'
+    sep_length = len(column_titles)
 
     os_linux: bool = (sys.platform == 'linux')
 

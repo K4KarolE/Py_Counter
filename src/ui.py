@@ -66,7 +66,7 @@ def generate_ui():
     window = Tk()
     window.title('Py Counter')
     WINDOW_WIDTH = 450
-    WINDOW_HEIGHT = 400
+    WINDOW_HEIGHT = 500
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
     window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+%d+%d' % (screen_width/2-275, screen_height/2-125))    #   position to the middle of the screen
